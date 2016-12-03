@@ -1,0 +1,120 @@
+Úkolem je vytvořit program, který bude vyhodnocovat šíření nákazy v openspace kanceláři.
+
+Openspace kanceláře jsou populární pro své nižší provozní náklady. Mají však i své nevýhody. Jednou z nevýhod je koncentrace velkého počtu lidí po dlouhou dobu. To například pomáhá šíření nakažlivých chorob. V našem příkladu máme zadanou openspace kancelář. Kancelář má obdélníkový tvar, lidé sedí v u stolů organizovaných jako řádky a sloupce. Pozice v kanceláři může být obsazená zdravým pracovníkem, nemocným pracovníkem nebo být neobsazená. Pracovníci chodí do práce i při nemoci, firemní kultura nepřipouští absence. Pracovníci musí vždy pracovat na určené pozici, nemohou místa měnit (např. mezi dny). Předpokládáme, že nemocný pracovník během dne nakazí chorobou své sousedy vlevo, vpravo, před sebou a za sebou. Další den se tito nakažení pracovníci sami stávají zdrojem infekce a nakazí obdobně své sousedy. Infekce není schopná se šířit přes prázdná (neobsazená) místa. Program dostane zadané rozmístění pracovníků v openspace s vyznačením zdravých, nemocných a neobsazených pozic. Úkolem je určit, kolik se celkem nakazí pracovníků a jak dlouho se bude infekce šířit.
+
+Vstupem je velikost openspace kanceláře (počet řádků a sloupců, v tomto pořadí). Dále následuje mapa openspace tvořená řádky a sloupci. Každá pozice v mapě obsahuje jeden ze tří znaků:
+
+tečka - neobsazená pozice,
+malé o - zdravý pracovník,
+vykřičník - nemocný pracovník.
+Mapa neobsahuje jiné znaky, neobsahuje mezery, za každou řádkou musí být právě jeden znak \n pro odřádkování.
+
+Výstupem programu je informace o celkovém počtu nakažených pracovníků a dále informace o době trvání nákazy. Dobu trvání nákazy chápeme jako počet dní během kterého se zvyšuje počet nakažených pracovníků. Tedy pokud máme mapu v následující podobě:
+
+!...
+....
+oooo
+pak k žádnému rozšiřování nákazy nedochází a celková doba šíření infekce bude 0 dní. Analogicky pro mapu:
+.o..ooo
+o!o.ooo
+.o..ooo
+bude nákaza probíhat 1 den. Pozor, program má zobrazit jiný výstup pro zcela zdravý openspace (viz ukázka).
+Pokud je vstup neplatný, program to musí detekovat a zobrazit chybové hlášení. Chybové hlášení zobrazujte na standardní výstup (ne na chybový výstup). Za chybu považujte:
+
+šířka či délka openspace není celé číslo v mezích 1 až 500,
+po zadání šířky a délky není odřádkování,
+mapa nemá obdélníkový tvar o zadaném rozměru,
+mapa obsahuje nepřípustné znaky (cokoliv mimo '!', '.' a 'o').
+Váš program bude spouštěn v omezeném testovacím prostředí. Je omezen dobou běhu (limit je vidět v logu referenčního řešení) a dále je omezena i velikost dostupné paměti. Limit na paměť je několikanásobně předimenzován a postačuje k uložení několika kopií celé mapy. Limit na čas je nastaven tak, aby rozumná implementace naivního algoritmu prošla povinnými testy. Pro zvládnutí bonusového testu je nastaven přísnější limit. V bonusovém testu jsou zadávané velké mapy, které nelze zvládnout naivním algoritmem.
+
+Ukázka práce programu:
+Velikost kancelare:
+4 4
+oooo
+oooo
+oooo
+!ooo
+Nakazenych: 16, doba sireni nakazy: 6
+Velikost kancelare:
+4 4
+o.oo
+o.oo
+o..o
+!o.o
+Nakazenych: 5, doba sireni nakazy: 3
+Velikost kancelare:
+4 4
+oooo
+o.oo
+o..o
+!o.o
+Nakazenych: 12, doba sireni nakazy: 9
+Velikost kancelare:
+4 4
+!oo!
+o.oo
+o..o
+!o.o
+Nakazenych: 12, doba sireni nakazy: 3
+Velikost kancelare:
+6 8
+ooo!oooo
+o......o
+o.oooo.o
+o.oooo.o
+o......o
+oooooooo
+Nakazenych: 24, doba sireni nakazy: 12
+Velikost kancelare:
+7 8
+!ooooooo
+.......o
+oooooooo
+o.......
+oooooooo
+.......o
+oooooooo
+Nakazenych: 35, doba sireni nakazy: 34
+Velikost kancelare:
+2 2
+.o
+o.
+Nikdo neonemocnel.
+Velikost kancelare:
+4 4
+oooo
+oooo
+oooo
+Xooo
+Nespravny vstup.
+Velikost kancelare:
+4 4
+oooo
+ooooo
+oooo
+!ooo
+Nespravny vstup.
+Velikost kancelare:
+5 4
+oooo
+oooo
+oooo
+!ooo
+Nespravny vstup.
+
+
+Poznámky:
+Znak odřádkování (\n) je i za poslední řádkou výstupu (i za případným chybovým hlášením).
+Při testování nezadávejte data ručně, využijte přesměrování vstupu.
+Omezená maximální velikost mapy úlohu částečně zjednodušuje. V této úloze není potřeba paměť alokovat dynamicky.
+Pro načítání jednotlivých znaků v mapě lze použít funkci fgetc. Funkci scanf lze též využít, ale je zde poněkud těžkopádná. Při jejím používání je potřeba pečlivě odlišovat formáty "%c" a " %c" (s mezerou).
+Slovní popis struktury platných vstupních dat není zcela exaktní. Proto na výtky některých studentů přikládáme i popis vstupního jazyka v EBNF:
+    input      ::= { whiteSpace } number { whiteSpace } number '\n' map
+    whiteSpace ::= ' ' | '\t' | '\n' | '\r'
+    number     ::= [ '+' ] digit { digit }
+    digit      ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+    map        ::= row '\n'
+    row        ::= { '.' | 'o' | '!' }
+  
+Poznámka: EBNF nedokáže zachytit statickou sémantiku. Tedy např. v EBNF není zachyceno omezení hodnot šířky a délky a dále není zachycena skutečnost, že velikost mapy musí odpovídat zadaným rozměrům.
+Explicitní zadání velikosti mapy není zcela nezbytné (dá se odvodit při načítání mapy). Šířka a výška je explicitně uvedena, aby se trochu zjednodušilo načítání vstupu.

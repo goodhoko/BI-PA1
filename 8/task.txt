@@ -1,0 +1,57 @@
+Úkolem je realizovat funkce (ne celý program, pouze funkce), které dokáží spravovat archiv s nastavením řídící jednotky spalovacího motoru.
+
+V aféře "dieselgate" vystupuje jako důležitý důkaz nastavení řídící jednotky motoru. Nastavení se liší podle typu motoru a roku výroby. Vlastní nastavení pak tvoří sada čísel, která je hlavně velmi tajná (a pro implementaci tohoto úkolu ani nebude zase tak důležitá). Vaším úkolem je realizovat sadu funkcí, které dokáži s takovými nastaveními pracovat.
+
+Nastavení chceme ukládat v podobě spojových seznamů - viz obrázek. Struktura TARCHIVE tvoří spojový seznam (ukazatel m_Next odkazuje na další prvek v seznamu), odbočky (m_Engines) pak odkazují na spojové struktury s popisem jednotlivých motorů. Celý archiv je organizovaný jedním z následujících způsobů:
+
+LIST_BY_YEAR - odbočky m_Engines odkazují na spojový seznam popisující motory vyráběné ve stejném roce. Spojový seznam TARCHIVE je řazen vzestupně podle roku. Každý spojový seznam TENGINE je pak řazen vzestupně podle typu motoru.
+
+LIST_BY_TYPE - odbočky m_Engines odkazují na spojový seznam popisující motory stejného typu. Spojový seznam TARCHIVE je řazen je vzestupně podle typu. Každý spojový seznam TENGINE je pak řazen vzestupně podle roku.
+
+Rozhraní funkcí je následující:
+
+#define LIST_BY_YEAR       0
+#define LIST_BY_TYPE       1
+
+#define TYPE_MAX           100
+#define SETUP_MAX          100
+
+typedef struct TEngine
+ {
+   struct TEngine * m_Next;
+   int              m_Year;
+   char             m_Type  [ TYPE_MAX ];
+   int              m_Setup [ SETUP_MAX ];
+ } TENGINE;
+
+typedef struct TArchive
+ {
+   struct TArchive * m_Next;
+   TENGINE         * m_Engines;
+ } TARCHIVE;
+
+TARCHIVE  * AddEngine      ( TARCHIVE        * list,
+                             int               listBy,
+                             TENGINE         * engine );
+void        DelArchive     ( TARCHIVE        * list );
+TARCHIVE * ReorderArchive  ( TARCHIVE        * list,
+                             int               listBy );
+
+TENGINE
+struktura popisuje jeden motor. Složka m_Year udává rok, složka m_Type je typ motoru (ASCIIZ řetězec). Složka m_Next je odkazem na další motor ve stejné kategorii nebo má hodnotu NULL pro poslední prvek spojového seznamu. Složka m_Setup je vyplněna informacemi o nastavení řídící jednotky. Vaše implementace tuto složku nepotřebuje, proto do ní nebude nijak zasahovat. Vzhledem k tajnému charakteru nastavení je dokonce zakázáno čtení a kopírování (tedy je potřeba pracovat s existujícími strukturami TENGINE a nevytvářet nové).
+TARCHIVE
+je pomocná struktura propojující seznamy TENGINE. Složka m_Next odkazuje na další prvek TARCHIVE (NULL pro poslední v seznamu), složka m_Engines obsahuje ukazatel na spojový seznam motorů se stejnou charakteristikou (typ/rok).
+AddEngine(list, listby, engine)
+dostane v parametru list odkaz na existující archiv nastavení řídících jednotek. Jejím úkolem je zařadit nový motor. Odkaz na dynamicky alokovanou strukturu s vyplněnými údaji o motoru je předaný v parameteru engine. Parametr listby má hodnotu LIST_BY_YEAR / LIST_BY_TYPE a udává, způsob organizace archivu (viz výše). Funkce použije alokovanou strukturu motoru a začlení ji do existujícího archivu. Je zakázáno strukturu kopírovat, je potřeba pouze správně proházet odkazy. Funkce vrátí ukazatel na na první prvek v archivu po provedení změny.
+DelArchive(list)
+funkce uvolní dynamicky alokovanou paměť, kterou používaly struktury v existujícím archivu list.
+ReorderArchive(list, listBy)
+funkce změní uspořádání existujícího archivu list tak, aby odpovídalo uspořádání listBy (LIST_BY_YEAR / LIST_BY_TYPE). Funkce musí zachovat existující struktury TENGINE (pouze přehazuje odkazy), může podle potřeby alokovat a uvolňovat struktury TARCHIVE. Návratovou hodnotou funkce je ukazatel na první prvek archivu po provedení úprav.
+Odevzdávejte zdrojový soubor, který obsahuje implementaci požadovaných funkcí AddEngine, DelArchive a ReorderArchive. Do zdrojového souboru přidejte i další Vaše podpůrné funkce, které jsou z nich volané. Funkce bude volaná z testovacího prostředí, je proto důležité přesně dodržet zadané rozhraní funkce. Za základ pro implementaci použijte kód z přiloženého archivu. V kódu chybí vyplnit těla funkcí a případné další podpůrné funkce. Ukázka obsahuje testovací funkci main, uvedené hodnoty jsou použité při základním testu. Všimněte si, že vkládání hlavičkových souborů, deklarace struktur a funkce main jsou zabalené v bloku podmíněného překladu (#ifdef/#endif). Prosím, ponechte bloky podmíněného překladu i v odevzdávaném zdrojovém souboru. Podmíněný překlad Vám zjednoduší práci. Při kompilaci na Vašem počítači můžete program normálně spouštět a testovat. Při kompilaci na Progtestu funkce main a vkládání hlavičkových souborů "zmizí", tedy nebude kolidovat s hlavičkovými soubory a funkcí main testovacího prostředí.
+
+Váš program bude spouštěn v omezeném testovacím prostředí. Je omezen dobou běhu (limit je vidět v logu referenčního řešení) a dále je omezena i velikost dostupné paměti. Očekává se základní řešení, úloha má cvičit práci se spojovými seznamy.
+
+Nápověda:
+Zkopírujte si ukázku z přílohy a použijte ji jako základ Vašeho řešení.
+Do funkce main si můžete doplnit i další Vaše testy, případně ji můžete libovolně změnit. Důležité je zachovat podmíněný překlad.
+Testovací prostředí pozná pokusy o kopírování struktur TENGINE a takové řešení odmítne.

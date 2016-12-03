@@ -47,7 +47,7 @@ int main(){
 					printf("Nespravny vstup.\n");
 					return 1;
 				}
-				/*if there \n, checks if number of characters in line fits declared number of columns, then go to the next line*/
+				/*if there is \n, checks if number of characters in line fits declared number of columns, then go to the next line*/
 				else if (c=='\n')
 					{
 						if(j!=cols+1)

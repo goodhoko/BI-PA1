@@ -1,0 +1,100 @@
+Úkolem je vytvořit program, který bude počítat množství roztoku potřebné pro dosažení zadané koncentrace.
+
+Předpokládáme, že máme k dispozici dva roztoky dané látky, každý roztok má nějakou koncentraci. Pro oba roztoky známe jejich koncentrace a jejich množství. Na vstupu dále dostaneme požadovanou koncentraci a požadované množství výsledného roztoku. Program vypočte, jaké množství roztoku č. 1 a roztoku č. 2 je potřeba smíchat, aby vzniklo zadané množství roztoku o cílové koncentraci.
+
+Vstupem programu je zadání parametrů celkem 3 roztoků:
+
+roztok č. 1,
+roztok č. 2 a
+výsledný roztok.
+Každý roztok je určen svým množstvím a koncentrací. Množství i koncentrace jsou desetinná čísla.
+
+Výstupem programu je informace o množství roztoku č. 1 a roztoku č. 2, které je potřeba smíchat, aby vzniklo požadované množství roztoku o zadané cílové koncentraci. Pokud nelze připravit požadované množství cílového roztoku v zadané koncentraci, zobrazí program informaci o nemožnosti vytvoření požadovaného cílového roztoku. V obou případech program zobrazí výsledek výpočtu ve formátu podle ukázky níže. Pozor, za výpisem je odřádkování (\n).
+
+Pokud je vstup neplatný, program to musí detekovat a zobrazit chybové hlášení. Chybové hlášení zobrazujte na standardní výstup (ne na chybový výstup). Za chybu považujte:
+
+nečíselné zadání množství nebo koncentrace,
+záporné množství,
+koncentrace mimo uzavřený interval < 0.0 ; 1.0 >.
+Při programování si dejte pozor na přesnou podobu výpisů. Výstup Vašeho programu kontroluje stroj, který požaduje přesnou shodu výstupů Vašeho programu s výstupy referenčními. Za chybu je považováno, pokud se výpis liší. I chybějící nebo přebývající mezera/odřádkování je považováno za chybu. Abyste tyto problémy rychle vyloučili, použijte přiložený archiv se sadou vstupních a očekávaných výstupních dat. Podívejte se na videotutoriál (edux -> výuková videa), jak testovací data použít a jak testování zautomatizovat.
+
+Váš program bude spouštěn v omezeném testovacím prostředí. Je omezen dobou běhu (limit je vidět v logu referenčního řešení) a dále je omezena i velikost dostupné paměti (ale tato úloha by ani s jedním omezením neměla mít problém). Testovací prostředí dále zakazuje používat některé "nebezpečné funkce" -- funkce pro spouštění programu, pro práci se sítí, ... Pokud jsou tyto funkce použité, program se nespustí. Možná ve svém programu používáte volání:
+
+int main ( int argc, char * argv [] )
+{
+ 
+  ...
+     
+  system ( "pause" ); /* aby se nezavrelo okno programu */
+  return 0;
+}
+Toto nebude v testovacím prostředí fungovat - je zakázáno spouštění jiného programu. (I pokud by se program spustil, byl by odmítnut. Nebyl by totiž nikdo, kdo by pauzu "odmáčkl", program by čekal věčně a překročil by tak maximální dobu běhu.) Pokud tedy chcete zachovat pauzu pro testování na Vašem počítači a zároveň chcete mít jistotu, že program poběží správně, použijte následující trik:
+
+int main ( int argc, char * argv [] )
+{
+ 
+  ...
+
+#ifndef __PROGTEST__
+  system ( "pause" ); /* toto progtest "nevidi" */
+#endif /* __PROGTEST__ */
+  return 0;
+} 
+
+
+Ukázka práce programu:
+Hmotnost a koncentrace #1:
+4 0.3
+Hmotnost a koncentrace #2:
+2 0.6
+Hmotnost a koncentrace vysledku:
+1 0.5
+0.333333 x #1 + 0.666667 x #2
+Hmotnost a koncentrace #1:
+1 0.5
+Hmotnost a koncentrace #2:
+1 0
+Hmotnost a koncentrace vysledku:
+0.2 0.2
+0.080000 x #1 + 0.120000 x #2
+Hmotnost a koncentrace #1:
+1 0.5
+Hmotnost a koncentrace #2:
+1 0
+Hmotnost a koncentrace vysledku:
+2 0.4
+Nelze dosahnout.
+Hmotnost a koncentrace #1:
+1 0.5
+Hmotnost a koncentrace #2:
+1 1.4
+Nespravny vstup.
+Hmotnost a koncentrace #1:
+1 abcd
+Nespravny vstup.
+Poznámky:
+Znak odřádkování (\n) je i za poslední řádkou výstupu (i za případným chybovým hlášením).
+Pro reprezentaci hodnot použijte desetinná čísla typu double. Nepoužívejte typ float, jeho přesnost nemusí být dostatečná.
+Při porovnávání výsledků je testovacím prostředím tolerovaná malá odchylka ≤ 1 ‰.
+Pro některé vstupy může existovat více možných řešení. Například pro vstup
+      10 0.5
+      20 0.5
+      5 0.5
+    
+je možné řešení 5+0, 4+1, 0+5, 1.27+3.73 a mnoho dalších. Testovací prostředí akceptuje libovolné správné řešení.
+Množství roztoku bývá většinou chápáno jako objem a koncentrace bývá vztažena k objemu. V úloze však budeme pracovat se hmotností a koncentraci budeme chápat jako poměr hmotností (hmotnostní zlomek). Jedná se o zjednodušení, které nám ušetří starosti s hustotou. Hmotnost je aditivní, objem nemusí být:
+smísením 1kg látky A a 1kg látky B vzniknou 2kg směsi,
+smísením 1l látky A a 1l látky B nemusí vzniknout 2l směsi (např. smícháním 1l hrachu a 1l vody vznikne méně než 2l směsi, voda vyplní mezery v hrachu).
+Pokud bychom měli pracovat s objemem, museli bychom úlohu ještě zkomplikovat hustotou.
+Úlohu lze vyřešit bez použití funkcí. Pokud ale správně použijete funkce, bude program přehlednější a bude se snáze ladit.
+Číselné vstupní hodnoty jsou zadávané tak, aby se vešly do rozsahu datového typu double.
+Slovní popis struktury platných vstupních dat není zcela exaktní. Proto na výtky některých studentů přikládáme i popis vstupního jazyka v EBNF:
+    input      ::= { whiteSpace } solution { whiteSpace } solution { whiteSpace } solution { whiteSpace } 
+    whiteSpace ::= ' ' | '\t' | '\n' | '\r'
+    solution   ::= decimal { whiteSpace } decimal
+    decimal    ::= [ '+' ] integer [ '.' integer [ ( 'e' | 'E' ) [ '+' | '-' ] integer ] ]  |
+                   [ '+' ] '.' integer [ ( 'e' | 'E' ) [ '+' | '-' ] integer ]
+    integer    ::= digit { digit }
+    digit      ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  
+Poznámka: EBNF nedokáže zachytit statickou sémantiku. Tedy např. v EBNF není zachyceno omezení rozsahu hodnot pro koncentrace.
